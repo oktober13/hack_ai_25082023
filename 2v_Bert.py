@@ -36,7 +36,7 @@ train_embeddings = model.encode(train_addresses)
 nbrs = NearestNeighbors(n_neighbors=1, algorithm='brute', metric='cosine').fit(train_embeddings)
 
 # Загрузка и обработка пользовательских запросов
-query_df = pd.read_csv('response.csv')
+query_df = pd.read_csv('responseOLD.csv')
 query_addresses = query_df['address'].tolist()
 
 # Преобразование адресов запросов в векторное представление

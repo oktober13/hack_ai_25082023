@@ -30,7 +30,7 @@ MANIFEST
 
 # Ignore data files
 result.csv
-response.csv
+responseOLD.csv
 .~lock.populated_response.csv#
 
 # PyInstaller

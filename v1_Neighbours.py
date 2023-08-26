@@ -25,7 +25,7 @@ X_train = vectorizer.fit_transform(train_addresses)
 nbrs = NearestNeighbors(n_neighbors=1, algorithm='brute', metric='cosine').fit(X_train)
 
 # Загрузка и обработка пользовательских запросов
-query_df = pd.read_csv('response.csv')
+query_df = pd.read_csv('responseOLD.csv')
 query_addresses = query_df['address'].tolist()
 X_query = vectorizer.transform(query_addresses)
 
