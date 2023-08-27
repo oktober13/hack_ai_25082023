@@ -76,23 +76,26 @@ class AddressMatcher:
         query_df = query_df.sort_values(by='weighted_similarity', ascending=False)
         query_df.to_csv('populated_response_v3.csv', index=False)
 
-    def find_matching_address(self, query_address):
+    def find_matching_addresses(self, query_address, num_results=10):
         query_address = [query_address]
         X_query = self.vectorizer.transform(query_address)
-        similar_indices = self.nbrs.kneighbors(X_query, return_distance=False)
-        matched_address = self.train_addresses[similar_indices[0][0]]
-        matched_building_id = int(
-            self.train_df.loc[self.train_df['full_address_building'] == matched_address, 'id_building'].values[0])
+        similar_indices = self.nbrs.kneighbors(X_query, n_neighbors=num_results, return_distance=False)
+
+        response_list = []
+        for idx in similar_indices[0]:
+            matched_address = self.train_addresses[idx]
+            matched_building_id = int(
+                self.train_df.loc[self.train_df['full_address_building'] == matched_address, 'id_building'].values[0])
+
+            response_list.append({
+                "target_building_id": matched_building_id,
+                "target_address": matched_address
+            })
 
         response = {
             "success": True,
             "query": [{"address": query_address[0]}],
-            "result": [
-                {
-                    "target_building_id": matched_building_id,
-                    "target_address": matched_address
-                }
-            ]
+            "result": response_list
         }
 
         return json.dumps(response, ensure_ascii=False, indent=2)
@@ -117,5 +120,5 @@ if __name__ == "__main__":
 
     # Для Александра пример использования для поиска адреса и создания JSON-ответа
     query_address = "аптерский 18 спб"
-    json_response = address_matcher.find_matching_address(query_address)
+    json_response = address_matcher.find_matching_addresses(query_address, num_results=10)
     print(json_response)
