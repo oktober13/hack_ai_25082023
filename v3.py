@@ -109,12 +109,13 @@ if __name__ == "__main__":
         "liter_building": 0.1
     }
 
+    train_data_path = 'result.csv'
     address_matcher = AddressMatcher(weights)
-    address_matcher.load_train_data('result.csv')
+    address_matcher.load_train_data(train_data_path)
+    query_data_path = 'clear_response_1.csv'  # Путь к тестовой выборке
+    address_matcher.run(train_data_path, query_data_path)  # Вызываем функцию run для обработки тестовой выборки
 
     # Для Александра пример использования для поиска адреса и создания JSON-ответа
     query_address = "аптерский 18 спб"
     json_response = address_matcher.find_matching_address(query_address)
     print(json_response)
-
-
