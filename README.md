@@ -37,7 +37,7 @@ areatype_file = 'areatype.csv'
 merged_data = merge_data(area_file, areatype_file, building_file, district_file, geonim_file, subrf_file, town_file, prefix_file)
 ```
 
-## Модуль `preproc_query.py`
+### Модуль `preproc_query.py`
 
 Этот модуль предназначен для предобработки данных запросов перед их использованием в Матчере Адресов. Он выполняет замену аббревиаций и форматирование адресов.
 
