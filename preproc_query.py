@@ -1,6 +1,7 @@
 import re
 
 
+# Функция для замены определенных шаблонов в адресах
 def replacer(test):
     replace_dict = {'\(': '', '\)': '', 'ул\.': 'улица', 'д\.': 'дом ', 'г\.': 'город', 'пер\.': 'переулок',
                     'пр\.': 'проспект',
@@ -16,6 +17,7 @@ def replacer(test):
     test['address'] = test['address'].apply(lambda x: re.sub(r"(?i)(Строение )([А-Яа-яA-Za-z])", r"литера \2", x))
     test['address'] = test['address'].str.replace('Строение', 'строение')
 
+    # Функция для обработки адресов, содержащих улицу
     def streets_address(address):
         if "улица" in address:
             parts = address.split(', ')

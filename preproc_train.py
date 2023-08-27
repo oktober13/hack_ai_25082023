@@ -1,13 +1,15 @@
 import pandas as pd
 
 
+# Функция для объединения различных наборов данных в один
 def merge_data(area_file, areatype_file, building_file, district_file, geonim_file, subrf_file, town_file, prefix_file):
-
+    # Функция для предварительной обработки данных из файлов
     def preprocessing(file_name, suffix):
         data = pd.read_csv(file_name)
         data = data.add_suffix(suffix)
         return data
 
+    # Загрузка и предварительная обработка данных для каждой категории
     area = preprocessing(area_file, '_area')
     areatype = preprocessing(areatype_file, '_areatype')
     building = preprocessing(building_file, '_building')
@@ -16,8 +18,11 @@ def merge_data(area_file, areatype_file, building_file, district_file, geonim_fi
     subrf = preprocessing(subrf_file, '_subrf')
     town = preprocessing(town_file, '_town')
     prefix = preprocessing(prefix_file, '_prefix')
+
+    # Отбор только актуальных зданий (со значением 'is_actual_building' равным True)
     building = building[building['is_actual_building'] == True]
 
+    # Объединение данных с помощью операций слияния (merge)
     merged_area = pd.merge(area, areatype, left_on='type_id_area', right_on='id_areatype', how='left')
     merged_area.drop(['type_id_area', 'id_areatype'], axis=1, inplace=True)
     merged_prefix = pd.merge(prefix, merged_area, left_on='area_id_prefix', right_on='id_area', how='left')

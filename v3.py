@@ -5,6 +5,7 @@ import numpy as np
 import json
 
 
+# Класс для сопоставления и анализа адресов
 class AddressMatcher:
     def __init__(self, weights):
         self.weights = weights
@@ -18,6 +19,7 @@ class AddressMatcher:
         self.matched_addresses = None
         self.matched_building_ids = None
 
+    # Загрузка тренировочных данных
     def load_train_data(self, train_data_path):
         dtypes = {
             "id_building": int,
@@ -35,11 +37,13 @@ class AddressMatcher:
         self.X_train = self.vectorizer.fit_transform(self.train_addresses)
         self.nbrs = NearestNeighbors(n_neighbors=1, algorithm='brute', metric='cosine').fit(self.X_train)
 
+    # Загрузка данных запросов
     def load_query_data(self, query_data_path):
         query_df = pd.read_csv(query_data_path)
         self.query_addresses = query_df['address'].tolist()
         self.X_query = self.vectorizer.transform(self.query_addresses)
 
+    # Сопоставление адресов
     def match_addresses(self):
         similar_indices = self.nbrs.kneighbors(self.X_query, return_distance=False)
         matched_addresses = [self.train_addresses[idx[0]] for idx in similar_indices]
@@ -48,6 +52,7 @@ class AddressMatcher:
             matched_addresses]
         return matched_addresses, matched_building_ids
 
+    # Расчет взвешенной схожести
     def calculate_weighted_similarity(self):
         weighted_similarities = []
         for query, matched in zip(self.query_addresses, self.matched_addresses):
@@ -62,6 +67,7 @@ class AddressMatcher:
             weighted_similarities.append(weighted_similarity)
         return weighted_similarities
 
+    # Запуск сопоставления и сохранение результатов в CSV
     def run(self, train_data_path, query_data_path):
         self.load_train_data(train_data_path)
         self.load_query_data(query_data_path)
@@ -76,6 +82,7 @@ class AddressMatcher:
         query_df = query_df.sort_values(by='weighted_similarity', ascending=False)
         query_df.to_csv('populated_response_v3.csv', index=False)
 
+    # Поиск сопоставленных адресов и создание JSON-ответа
     def find_matching_addresses(self, query_address, num_results=10):
         query_address = [query_address]
         X_query = self.vectorizer.transform(query_address)
@@ -101,6 +108,7 @@ class AddressMatcher:
         return json.dumps(response, ensure_ascii=False, indent=2)
 
 
+# Входная точка программы
 if __name__ == "__main__":
     weights = {
         "post_prefix_building": 0.9,
@@ -118,7 +126,7 @@ if __name__ == "__main__":
     query_data_path = 'clear_response_1.csv'  # Путь к тестовой выборке
     address_matcher.run(train_data_path, query_data_path)  # Вызываем функцию run для обработки тестовой выборки
 
-    # Для Александра пример использования для поиска адреса и создания JSON-ответа
+    # Пример использования для поиска адреса и создания JSON-ответа
     query_address = "аптерский 18 спб"
     json_response = address_matcher.find_matching_addresses(query_address, num_results=10)
     print(json_response)
