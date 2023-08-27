@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <link href="{% static 'geocoder/bootstrap-5.0.2-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'geocoder/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'geocoder/styles.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<main>
+    <header class="py-3 border-bottom">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-3 me-md-auto text-dark text-decoration-none">
+                <img src="{% static 'geocoder/spb_icon.jpg' %}" class="img-fluid me-3 mb-1" width="48" height="48">
+                <span class="fs-4">AI Wizardry X SPB</span>
+            </a>
+
+            <ul class="nav nav-pills mt-1">
+                <li class="nav-item mr-3"><a href="/" class="nav-link active" aria-current="page">Главная</a></li>
+                <li class="nav-item"><a href="/learning" class="nav-link" aria-current="page">Обучение</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <img src="{% static 'geocoder/spb_pano.jpg' %}" class="img-fluid mb-5 header_image" width="100%">
+
+    {% block content %}
+    {% endblock %}
+</main>
+</body>
+
+</html>

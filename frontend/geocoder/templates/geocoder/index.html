@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center flex-column">
+    <div class="mb-3">
+        <h2>Поиск по адресам</h2>
+        <input type="text" id="searchInput" class="form-control" placeholder="Введите запрос">
+        <div class="dropdown mt-1 overlay" aria-labelledby="searchInput">
+            <ul id="searchResults">
+                <!-- Результаты поиска будут отображаться здесь -->
+            </ul>
+        </div>
+    </div>
+    <form>
+        <div class="mb-3">
+            <h2>Загрузка датасета</h2>
+            <input class="form-control" type="file" id="formFile">
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function() {
+        let inputField = document.getElementById('searchInput');
+        let timeout = null;
+        inputField.addEventListener('input', function() {
+        clearTimeout(timeout);
+
+        timeout = setTimeout(function() {
+            myFunction();
+        }, 500);
+        });
+
+        function fetchGet(url) {
+          return fetch(url)
+            .then(response => response.json())
+            .catch(error => {
+              console.error('Ошибка при выполнении GET-запроса:', error);
+            });
+        }
+
+        function myFunction() {
+          console.log("Пользователь остановил ввод");
+
+        let query = inputField.value;
+
+        fetch('http://127.0.0.1:5000/search?q=' + query)
+            .then(response => response.json())
+            .then(res => {
+                $('#searchResults').empty();
+
+                let searchResults = [];
+
+                res.forEach((element) => {
+                    searchResults.push(element.target_address);
+                })
+
+                searchResults.forEach(function(result) {
+                  let listItem = $('<li></li>')
+                  .addClass('dropdown-item').addClass('border').addClass('hint_element')
+                  .text(result).click(function(event){
+                      event.preventDefault();
+                        let text = jQuery(this).text();
+                        $('#searchInput').val(text);
+                        $('#searchResults').empty();
+                  });
+                  $('#searchResults').append(listItem);
+            });
+
+            })
+            .catch(error => {
+              console.error('Ошибка при выполнении GET-запроса:', error);
+        });
+        }
+    });
+
+
+
+</script>
+{% endblock %}
