@@ -67,7 +67,7 @@ numpy==1.25.2
 pip install pandas scikit-learn numpy
 ```
 
-## Использование
+## Использование без Docker
 
 Скачайте или склонируйте этот репозиторий на ваш компьютер.
 
@@ -102,6 +102,14 @@ query_address = "аптерский 18 спб"
 json_response = address_matcher.find_matching_address(query_address)
 print(json_response)
 ```
+
+## Установка и запуск при помощи Docker
+
+1. Установите Docker, если он не установлен.
+2. Запустите Docker-контейнер, выполнив команду:
+
+`docker run -v /path/data image-name`
+
 
 ## Конфигурация
 
